@@ -102,7 +102,11 @@
   .card-layer { position: absolute; inset: 0; overflow: hidden; }
   .card-layer[hidden] { display: none; }
 
-  .photo-img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: grab; touch-action: none; }
+  /* A background-image div, not an <img> with object-fit — html2canvas
+     doesn't reliably honor object-fit/object-position on <img>, which made
+     exported PNG/PDF crops not match the live preview. background-size/
+     background-position render identically in both. */
+  .photo-img { width: 100%; height: 100%; background-size: cover; background-repeat: no-repeat; cursor: grab; touch-action: none; }
 
   /* Freezes every entrance animation on the card while html2canvas captures
      it — without this, a capture can land mid-animation (e.g. the photo
@@ -268,7 +272,7 @@
       <div class="card" id="card" data-postcard-export="true">
 
         <div class="card-layer" id="cardFront">
-          <img id="photoImg" class="photo-img" draggable="false" hidden>
+          <div id="photoImg" class="photo-img" hidden></div>
           <div class="photo-placeholder" id="photoPlaceholder">
             <div class="photo-placeholder-tag">drop a photo here</div>
           </div>
@@ -632,7 +636,7 @@
     function clamp(v) { return Math.max(0, Math.min(100, v)); }
     state.photoPosX = clamp(dragOrigin.posX - dxPct);
     state.photoPosY = clamp(dragOrigin.posY - dyPct);
-    els.photoImg.style.objectPosition = Math.round(state.photoPosX) + '% ' + Math.round(state.photoPosY) + '%';
+    els.photoImg.style.backgroundPosition = Math.round(state.photoPosX) + '% ' + Math.round(state.photoPosY) + '%';
   }
   function finishPhotoDrag() {
     dragOrigin = null;
@@ -900,10 +904,10 @@
     // photo
     els.photoLabel.textContent = s.photo ? 'Photo set — click or drop to replace (drag the photo in the card to reposition)' : 'Click or drop an image here';
     if (s.photo) {
-      els.photoImg.src = s.photo;
+      els.photoImg.style.backgroundImage = 'url(' + s.photo + ')';
       els.photoImg.hidden = false;
       els.photoPlaceholder.hidden = true;
-      els.photoImg.style.objectPosition = Math.round(s.photoPosX) + '% ' + Math.round(s.photoPosY) + '%';
+      els.photoImg.style.backgroundPosition = Math.round(s.photoPosX) + '% ' + Math.round(s.photoPosY) + '%';
     } else {
       els.photoImg.hidden = true;
       els.photoPlaceholder.hidden = false;
