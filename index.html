@@ -22,10 +22,10 @@
     * { transition: none !important; animation: none !important; }
   }
 
-  .app { display: flex; min-height: 100vh; }
+  .app { display: flex; min-height: 100vh; min-height: 100dvh; }
 
   /* LEFT: control panel */
-  .panel { width: 392px; flex: 0 0 392px; background: #fdfcfa; border-right: 1px solid #e3e0d8; padding: 30px 28px 40px; overflow-y: auto; height: 100vh; }
+  .panel { width: 392px; flex: 0 0 392px; background: #fdfcfa; border-right: 1px solid #e3e0d8; padding: 30px 28px 40px; overflow-y: auto; height: 100vh; height: 100dvh; -webkit-overflow-scrolling: touch; }
   .brand { animation: riseIn 400ms ease-out both; }
   .brand-title { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600; font-size: 27px; letter-spacing: -0.3px; }
   .brand-sub { font-size: 12.5px; color: #6f6a62; margin-top: 3px; margin-bottom: 24px; }
@@ -54,7 +54,7 @@
   .dropzone { border: 1.5px dashed #bcb7ad; border-radius: 14px; padding: 20px; text-align: center; font-size: 12.5px; color: #6f6a62; cursor: pointer; margin-bottom: 26px; background: #faf9f5; transition: all 200ms; }
   .dropzone:hover { border-color: #1c1a17; background: #f4f2ec; }
 
-  .field-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #d8d5ce; font-family: 'Instrument Sans', sans-serif; font-size: 14px; margin-bottom: 26px; background: #fff; transition: all 200ms; outline: none; }
+  .field-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #d8d5ce; font-family: 'Instrument Sans', sans-serif; font-size: 16px; margin-bottom: 26px; background: #fff; transition: all 200ms; outline: none; }
   .field-input:focus { border-color: #1c1a17; box-shadow: 0 0 0 3px rgba(28,26,23,0.07); }
 
   .swatch-row { display: flex; gap: 10px; margin-bottom: 26px; }
@@ -81,9 +81,11 @@
   textarea.field-input { resize: vertical; line-height: 1.5; }
 
   /* RIGHT: preview desk */
-  .desk { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; padding: 40px; background: radial-gradient(ellipse at 50% 30%, #f3f1ea, #e8e5dd); position: relative; overflow: hidden; }
+  .desk { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 20px; padding: 40px; background: radial-gradient(ellipse at 50% 30%, #f3f1ea, #e8e5dd); position: relative; overflow: hidden; }
 
-  .desk-controls { display: flex; gap: 10px; animation: riseIn 400ms 120ms ease-out both; }
+  .card-stage { flex: 1 1 auto; min-height: 0; min-width: 0; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+  .desk-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; animation: riseIn 400ms 120ms ease-out both; }
   .flip-btn { padding: 11px 20px; border-radius: 999px; border: 1.5px solid #1c1a17; background: transparent; font-size: 13px; font-weight: 600; cursor: pointer; letter-spacing: 0.2px; color: #1c1a17; transition: all 180ms; }
   .flip-btn:hover { background: #1c1a17; color: #fff; transform: translateY(-1px); }
   .flip-btn:active { transform: scale(0.97); }
@@ -101,7 +103,7 @@
   .card-layer { position: absolute; inset: 0; overflow: hidden; }
   .card-layer[hidden] { display: none; }
 
-  .photo-img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: grab; animation: photoIn 400ms ease-out both; }
+  .photo-img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: grab; touch-action: none; animation: photoIn 400ms ease-out both; }
   .photo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
   .photo-placeholder-tag { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: rgba(0,0,0,0.45); background: rgba(255,255,255,0.65); padding: 7px 12px; border-radius: 6px; }
 
@@ -151,14 +153,45 @@
   .to-value { border-bottom: 1px solid; font-size: 20px; padding: 2px 2px 4px; min-height: 24px; }
   .to-blank { border-bottom: 1px solid; height: 30px; }
 
-  .side-caption { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: #827d73; animation: riseIn 400ms 260ms ease-out both; }
+  .side-caption { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: #827d73; animation: riseIn 400ms 260ms ease-out both; text-align: center; }
+
+  /* RESPONSIVE: tablet & mobile — stack the panel above the preview */
+  @media (max-width: 880px) {
+    .app { flex-direction: column; min-height: 100vh; min-height: 100dvh; height: auto; }
+    .panel { width: 100%; flex: 0 0 auto; height: auto; max-height: 46vh; max-height: 46dvh; border-right: none; border-bottom: 1px solid #e3e0d8; padding: 22px 20px 24px; }
+    .desk { flex: 1 1 auto; min-height: 320px; padding: 20px 16px; gap: 14px; }
+    .brand-title { font-size: 23px; }
+    .style-row { gap: 6px; }
+    .swatch { width: 34px; height: 34px; }
+    .swatch-row { gap: 12px; flex-wrap: wrap; }
+    .chip, .stamp-opt { padding: 10px 14px; }
+    .desk-controls { width: 100%; }
+    .flip-btn, .download-group { flex: 1 1 auto; justify-content: center; }
+    .download-btn { flex: 1; text-align: center; }
+  }
+
+  @media (max-width: 520px) {
+    .panel { max-height: 50vh; max-height: 50dvh; padding: 18px 16px 20px; }
+    .brand-sub { font-size: 12px; margin-bottom: 18px; }
+    .section-label { margin-bottom: 8px; }
+    .style-row, .stamp-row { gap: 6px; margin-bottom: 20px; }
+    .style-opt { padding: 10px 4px 8px; }
+    .field-input { margin-bottom: 20px; padding: 11px 12px; }
+    .two-col { gap: 8px; margin-bottom: 18px; }
+    .desk { padding: 16px 12px; gap: 10px; }
+    .flip-btn { padding: 11px 16px; font-size: 12.5px; }
+    .download-btn { padding: 11px 10px 11px 16px; font-size: 12.5px; }
+    .download-format { padding: 0 18px 0 8px; }
+    .side-caption { font-size: 10px; }
+  }
+
 </style>
 </head>
 <body>
 <div class="app">
 
   <!-- LEFT: control panel -->
-  <div class="panel">
+  <div class="panel" id="panel">
     <div class="brand">
       <div class="brand-title">Postcard Studio</div>
       <div class="brand-sub">Compose, flip, and mail-worthy in minutes.</div>
@@ -226,6 +259,7 @@
       </div>
     </div>
 
+    <div class="card-stage" id="cardStage">
     <div class="preview-wrap" id="previewWrap">
       <div class="card" id="card" data-postcard-export="true">
 
@@ -318,6 +352,7 @@
         </div>
 
       </div>
+    </div>
     </div>
 
     <div class="side-caption" id="sideCaption">— FRONT · 6×4 IN —</div>
@@ -444,7 +479,7 @@
   var els = {};
   ['tabsPill','tabFrontBtn','tabBackBtn','formFront','formBack','styleRow','dropzone','photoLabel',
    'fileInput','titleInput','swatchRow','frontPostmarkRow','fromInput','toInput','messageInput',
-   'stampRow','backPostmarkRow','flipBtn','downloadBtn','downloadFormat','previewWrap','card',
+   'stampRow','backPostmarkRow','flipBtn','downloadBtn','downloadFormat','panel','cardStage','previewWrap','card',
    'cardFront','cardBack','photoImg','photoPlaceholder','titleText','frontPostmark','frontPmBoxed',
    'frontPmBoxedText','frontPmBoxedLine','frontPmBoxedDate','frontPmRound','frontPmRings',
    'frontPmRoundText','frontPmRoundLine','frontPmRoundDate','frontPmBars','retroCornerTl',
@@ -575,49 +610,84 @@
     onFileToPhoto(f);
   });
 
-  // --- photo repositioning drag ---
+  // --- photo repositioning drag (mouse + touch) ---
   var dragOrigin = null;
-  els.photoImg.addEventListener('mousedown', function (e) {
-    if (!state.photo) return;
-    e.preventDefault();
-    e.stopPropagation();
+  function beginPhotoDrag(clientX, clientY, rect) {
     dragOrigin = {
-      x: e.clientX, y: e.clientY,
+      x: clientX, y: clientY,
       posX: state.photoPosX, posY: state.photoPosY,
-      rect: e.currentTarget.getBoundingClientRect()
+      rect: rect
     };
     state.draggingPhoto = true;
     els.photoImg.style.cursor = 'grabbing';
-    window.addEventListener('mousemove', onPhotoDragMove);
-    window.addEventListener('mouseup', endPhotoDrag);
-  });
-  function onPhotoDragMove(e) {
+  }
+  function movePhotoDrag(clientX, clientY) {
     if (!dragOrigin) return;
-    var dxPct = ((e.clientX - dragOrigin.x) / Math.max(1, dragOrigin.rect.width)) * 100;
-    var dyPct = ((e.clientY - dragOrigin.y) / Math.max(1, dragOrigin.rect.height)) * 100;
+    var dxPct = ((clientX - dragOrigin.x) / Math.max(1, dragOrigin.rect.width)) * 100;
+    var dyPct = ((clientY - dragOrigin.y) / Math.max(1, dragOrigin.rect.height)) * 100;
     function clamp(v) { return Math.max(0, Math.min(100, v)); }
     state.photoPosX = clamp(dragOrigin.posX - dxPct);
     state.photoPosY = clamp(dragOrigin.posY - dyPct);
     els.photoImg.style.objectPosition = Math.round(state.photoPosX) + '% ' + Math.round(state.photoPosY) + '%';
   }
-  function endPhotoDrag() {
+  function finishPhotoDrag() {
     dragOrigin = null;
     state.draggingPhoto = false;
     els.photoImg.style.cursor = 'grab';
     window.removeEventListener('mousemove', onPhotoDragMove);
     window.removeEventListener('mouseup', endPhotoDrag);
+    window.removeEventListener('touchmove', onPhotoTouchMove);
+    window.removeEventListener('touchend', endPhotoDrag);
+    window.removeEventListener('touchcancel', endPhotoDrag);
   }
+  function onPhotoDragMove(e) { movePhotoDrag(e.clientX, e.clientY); }
+  function onPhotoTouchMove(e) {
+    if (!dragOrigin || !e.touches[0]) return;
+    e.preventDefault();
+    movePhotoDrag(e.touches[0].clientX, e.touches[0].clientY);
+  }
+  function endPhotoDrag() { finishPhotoDrag(); }
+
+  els.photoImg.addEventListener('mousedown', function (e) {
+    if (!state.photo) return;
+    e.preventDefault();
+    e.stopPropagation();
+    beginPhotoDrag(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect());
+    window.addEventListener('mousemove', onPhotoDragMove);
+    window.addEventListener('mouseup', endPhotoDrag);
+  });
+  els.photoImg.addEventListener('touchstart', function (e) {
+    if (!state.photo || !e.touches[0]) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var t = e.touches[0];
+    beginPhotoDrag(t.clientX, t.clientY, e.currentTarget.getBoundingClientRect());
+    window.addEventListener('touchmove', onPhotoTouchMove, { passive: false });
+    window.addEventListener('touchend', endPhotoDrag);
+    window.addEventListener('touchcancel', endPhotoDrag);
+  }, { passive: false });
 
   // --- resize / scale ---
+  // Measures the actual space CSS has laid out for the card (via #cardStage,
+  // a flex:1 box that fills whatever room is left after the panel/controls/
+  // caption), rather than hardcoding the desktop side-by-side dimensions.
+  // That keeps scaling correct across the stacked mobile/tablet layout too.
   function onResize() {
-    var availW = Math.max(200, window.innerWidth - 392 - 120);
-    var availH = Math.max(200, window.innerHeight - 200);
+    var stageRect = els.cardStage.getBoundingClientRect();
+    var availW = Math.max(160, stageRect.width - 16);
+    var availH = Math.max(160, stageRect.height - 16);
     state.scale = Math.min(1, availW / CARD_W, availH / CARD_H);
     applyCardTransform();
     els.previewWrap.style.width = (CARD_W * state.scale) + 'px';
     els.previewWrap.style.height = (CARD_H * state.scale) + 'px';
   }
   window.addEventListener('resize', onResize);
+  window.addEventListener('orientationchange', onResize);
+  if (window.ResizeObserver) {
+    var stageObserver = new ResizeObserver(onResize);
+    stageObserver.observe(els.cardStage);
+    stageObserver.observe(els.panel);
+  }
 
   function applyCardTransform() {
     els.card.style.transform = 'scale(' + state.scale + ') ' + (state.flipping ? 'scaleX(0.04) scaleY(1.04)' : 'scaleX(1) scaleY(1)');
