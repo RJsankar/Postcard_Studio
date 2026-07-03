@@ -739,15 +739,24 @@
     });
   }
 
+  // Captures a detached clone of the card, not the live one on screen — the
+  // old approach reset the real card's transform to full size in place to
+  // capture it, which made the live preview visibly jump/reset for a moment
+  // on every download. The clone is built and torn down off-screen instead.
   function captureCard(scale) {
-    var card = els.card;
-    var oldTransform = card.style.transform;
-    var oldTransition = card.style.transition;
-    card.style.transition = 'none';
-    card.style.transform = 'scale(1) scaleX(1) scaleY(1)';
-    card.classList.add('exporting');
+    var clone = els.card.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.classList.add('exporting');
+    clone.style.position = 'fixed';
+    clone.style.left = '-9999px';
+    clone.style.top = '0';
+    clone.style.margin = '0';
+    clone.style.transform = 'none';
+    clone.style.transition = 'none';
+    clone.style.opacity = '1';
+    document.body.appendChild(clone);
     return raf2().then(function () {
-      return window.html2canvas(card, {
+      return window.html2canvas(clone, {
         scale: scale,
         backgroundColor: null,
         useCORS: true,
@@ -757,9 +766,7 @@
         height: CARD_H
       });
     }).finally(function () {
-      card.style.transform = oldTransform;
-      card.style.transition = oldTransition;
-      card.classList.remove('exporting');
+      clone.remove();
     });
   }
 
