@@ -16,7 +16,6 @@
   @keyframes stampIn { 0% { transform: scale(1.6) rotate(-22deg); opacity: 0; } 60% { transform: scale(0.94) rotate(-7deg); opacity: 1; } 100% { transform: scale(1) rotate(-8deg); opacity: 1; } }
   @keyframes riseIn { from { transform: translateY(14px); } to { transform: translateY(0); } }
   @keyframes cardIn { 0% { transform: translateY(-24px) rotate(-2.5deg); } 100% { transform: translateY(0) rotate(0deg); } }
-  @keyframes photoIn { from { transform: scale(1.04); } to { transform: scale(1); } }
   ::placeholder { color: #aaa59b; }
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
@@ -103,7 +102,12 @@
   .card-layer { position: absolute; inset: 0; overflow: hidden; }
   .card-layer[hidden] { display: none; }
 
-  .photo-img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: grab; touch-action: none; animation: photoIn 400ms ease-out both; }
+  .photo-img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: grab; touch-action: none; }
+
+  /* Freezes every entrance animation on the card while html2canvas captures
+     it — without this, a capture can land mid-animation (e.g. the photo
+     still mid-zoom from its entrance effect) and bake that into the export. */
+  .card.exporting, .card.exporting * { animation: none !important; transition: none !important; }
   .photo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
   .photo-placeholder-tag { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: rgba(0,0,0,0.45); background: rgba(255,255,255,0.65); padding: 7px 12px; border-radius: 6px; }
 
@@ -737,6 +741,7 @@
     var oldTransition = card.style.transition;
     card.style.transition = 'none';
     card.style.transform = 'scale(1) scaleX(1) scaleY(1)';
+    card.classList.add('exporting');
     return raf2().then(function () {
       return window.html2canvas(card, {
         scale: scale,
@@ -750,6 +755,7 @@
     }).finally(function () {
       card.style.transform = oldTransform;
       card.style.transition = oldTransition;
+      card.classList.remove('exporting');
     });
   }
 
